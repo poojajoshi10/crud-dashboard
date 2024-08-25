@@ -1,6 +1,5 @@
 // lib/userApi.ts
-
-export type User = {
+export interface User {
     id: string;
     first_name: string;
     last_name: string;
@@ -8,47 +7,48 @@ export type User = {
     alternate_email: string;
     password: string;
     age: number;
-  };
+  }
   
-  // Fetch users from the API
+  const API_URL = '/api/users';
+  
   export async function fetchUsers(): Promise<User[]> {
-    const response = await fetch('/api/users');
+    const response = await fetch(API_URL);
+    if (!response.ok) {
+      throw new Error('Failed to fetch users');
+    }
     return response.json();
   }
   
-  // Add a new user
-  export async function addUser(newUser: Omit<User, 'id'>): Promise<User> {
-    const response = await fetch('/api/users', {
+  export async function addUser(user: Omit<User, 'id'>): Promise<User> {
+    const response = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newUser),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user),
     });
+    if (!response.ok) {
+      throw new Error('Failed to add user');
+    }
     return response.json();
   }
   
-  // Update an existing user
-  export async function updateUser(updatedUser: User): Promise<User> {
-    const response = await fetch('/api/users', {
+  export async function updateUser(user: User): Promise<User> {
+    const response = await fetch(`${API_URL}/${user.id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedUser),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user),
     });
+    if (!response.ok) {
+      throw new Error('Failed to update user');
+    }
     return response.json();
   }
   
-  // Delete a user
-  export async function deleteUser(id: string): Promise<{ success: boolean }> {
-    const response = await fetch(`/api/users`, {
+  export async function deleteUser(id: string): Promise<void> {
+    const response = await fetch(`${API_URL}/${id}`, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id }),
     });
-    return response.json();
+    if (!response.ok) {
+      throw new Error('Failed to delete user');
+    }
   }
   

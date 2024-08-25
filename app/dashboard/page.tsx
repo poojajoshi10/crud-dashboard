@@ -1,12 +1,6 @@
-// app/dashboard/page.tsx
+// app/page.tsx
 
-import React from 'react';
-
-export default function DashboardPage() {
-  return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <p>Welcome to the dashboard! Select an option from the navigation panel.</p>
-    </div>
-  );
-}
+export default function HomePage() {
+    return <div className="p-8">Welcome to the dashboard!</div>;
+  }
+  
